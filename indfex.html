@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Französisch Exklusiv v1.2.9.7</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --btn-height: 38px; /* Leicht erhöht für bessere Bedienung auf großen Displays */
+        }
+
+        body {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Responsiver Container für 6,9 bis 7,9 Zoll */
+        .app-container {
+            width: 95%;
+            max-width: 420px; /* Perfekte Breite für große Smartphones und kleine Tablets */
+            min-height: 80vh;
+            background: radial-gradient(circle at center, #0c1a2b 0%, #000 100%);
+            border: 4px solid var(--gold);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(212, 175, 55, 0.2);
+            border-radius: 60px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Verteilt Elemente gleichmäßig */
+            padding-top: 20px;
+            padding-bottom: 25px;
+            box-sizing: border-box;
+        }
+
+        header {
+            padding: 5px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .ornament-l, .ornament-r {
+            position: absolute;
+            top: 28px;
+            color: var(--gold);
+            font-size: 1.4em;
+            opacity: 0.7;
+        }
+        .ornament-l { left: 40px; }
+        .ornament-r { right: 40px; }
+
+        header h1 { color: var(--gold); margin: 0; font-size: 1.8em; text-transform: uppercase; letter-spacing: 3px; }
+        .sub-header { color: var(--gold); font-size: 0.85em; text-transform: uppercase; margin: 3px 0; letter-spacing: 1px; }
+        .version-info { color: var(--gold); font-size: 0.65em; opacity: 0.5; }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 15px 30px;
+        }
+
+        .premium-btn {
+            background: rgba(255,255,255,0.03);
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            height: var(--btn-height);
+            font-size: 0.75em;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s;
+            outline: none;
+        }
+        
+        .premium-btn:active {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        /* Vergrößerte, responsive Lernkarte */
+        .flashcard {
+            width: 85%;
+            max-width: 340px;
+            height: 160px; /* Von 125px auf 160px erhöht */
+            background: linear-gradient(145deg, #0a0a0a, #000);
+            border: 1px solid var(--gold);
+            border-radius: 35px;
+            margin: 15px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            position: relative;
+            box-sizing: border-box;
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        #phrase-fr { font-size: 1.25em; color: var(--gold); font-weight: bold; margin-bottom: 8px; padding: 0 10px; line-height: 1.3; }
+        #phrase-de { font-size: 0.9em; color: #fff; opacity: 0.7; padding: 0 10px; line-height: 1.3; }
+
+        .card-counter-inside {
+            position: absolute;
+            bottom: 12px;
+            right: 25px;
+            color: var(--gold);
+            font-size: 0.65em;
+            font-weight: bold;
+        }
+
+        .controls { 
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 10px 40px;
+        }
+
+        .ctrl-btn {
+            background: #000;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            height: var(--btn-height);
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.75em;
+            text-transform: uppercase;
+        }
+
+        .play-btn { background: var(--gold); color: #000; }
+
+        .menu-footer {
+            width: 190px;
+            margin: 15px auto 0 auto;
+            background: var(--gold);
+            color: #000;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            border-radius: 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            letter-spacing: 0.5px;
+        }
+
+        /* Flexibler Außen-Footer */
+        .outer-footer {
+            margin: 15px 0 20px 0;
+            color: var(--gold);
+            font-size: 0.75em;
+            letter-spacing: 1px;
+            font-weight: bold;
+            width: 95%;
+            max-width: 420px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .outer-footer span {
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+        .outer-footer span:hover {
+            opacity: 1;
+        }
+
+        /* Modal für Impressum / Datenschutz */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #0c1a2b;
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 25px;
+            width: 80%;
+            max-width: 320px;
+            max-height: 75vh;
+            overflow-y: auto;
+            color: #fff;
+            font-size: 0.85em;
+            position: relative;
+            line-height: 1.4;
+        }
+        .modal-content h3 { color: var(--gold); margin-top: 0; font-size: 1.2em; text-transform: uppercase; }
+        .close-modal {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            float: right;
+            margin-top: 15px;
+            text-transform: uppercase;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <div class="ornament-l">⚜</div>
+        <h1>Französisch</h1>
+        <div class="ornament-r">⚜</div>
+        <div class="sub-header">Premium Edition</div>
+        <div class="version-info">Version 1.2.9.7</div>
+    </header>
+
+    <div class="menu-grid">
+        <button class="premium-btn" onclick="setCategory('alltag')">Alltag</button>
+        <button class="premium-btn" onclick="setCategory('basis')">Basis</button>
+        <button class="premium-btn" onclick="setCategory('alltagswissen')">Wissen</button>
+        <button class="premium-btn" onclick="setCategory('reise')">Reise</button>
+        <button class="premium-btn" onclick="setCategory('restaurant')">Gastro</button>
+        <button class="premium-btn" onclick="setCategory('behoerden')">Amt</button>
+    </div>
+
+    <div class="flashcard" onclick="nextCard()">
+        <div id="phrase-fr">Bienvenue</div>
+        <div id="phrase-de">Tippen zum Starten</div>
+        <div class="card-counter-inside" id="counter">1 / 50</div>
+    </div>
+
+    <div class="controls">
+        <button class="ctrl-btn" onclick="prevCard()">Zurück</button>
+        <button class="ctrl-btn play-btn" onclick="speak()">Audio</button>
+        <button class="ctrl-btn" onclick="nextCard()">Vor</button>
+    </div>
+
+    <div class="menu-footer" onclick="setCategory('welcome')">Menü - Start</div>
+</div>
+
+<div class="outer-footer">
+    <span onclick="openModal('impressum')">Impressum</span>
+    <div>(c) 2026 Premium App</div>
+    <span onclick="openModal('datenschutz')">Datenschutz</span>
+</div>
+
+<div id="legalModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">Titel</h3>
+        <div id="modalBody">Inhalt...</div>
+        <button class="close-modal" onclick="closeModal()">Schließen</button>
+    </div>
+</div>
+
+<script>
+    const data = {
+        welcome: [
+            {fr: "Bonjour tout le monde", de: "Hallo alle zusammen"},
+            {fr: "Comment ça va ?", de: "Wie geht es?"},
+            {fr: "C'est un plaisir", de: "Es ist ein Vergnügen"},
+            {fr: "Apprendre le français", de: "Französisch lernen"},
+            {fr: "À votre santé", de: "Auf Ihr Wohl"},
+            {fr: "Bienvenue dans l'application", de: "Willkommen in der App"},
+            {fr: "Prêt pour apprendre ?", de: "Bereit zum Lernen?"},
+            {fr: "Étape par étape", de: "Schritt für Schritt"},
+            {fr: "La langue de l'amour", de: "Die Sprache der Liebe"},
+            {fr: "Bonne découverte", de: "Viel Spaß beim Entdecken"},
+            {fr: "Un pas en avant", de: "Ein Schritt nach vorn"},
+            {fr: "Tout est possible", de: "Alles ist möglich"},
+            {fr: "La culture française", de: "Die französische Kultur"},
+            {fr: "Parlez-vous français ?", de: "Sprechen Sie Französisch?"},
+            {fr: "Un peu de pratique", de: "Ein bisschen Übung"},
+            {fr: "Chaque jour compte", de: "Jeder Tag zählt"},
+            {fr: "Écoutez attentivement", de: "Hören Sie aufmerksam zu"},
+            {fr: "Répétez après moi", de: "Sprechen Sie mir nach"},
+            {fr: "Bonne chance à tous", de: "Viel Glück an alle"},
+            {fr: "Le succès est proche", de: "Der Erfolg ist nah"},
+            {fr: "Amusez-vous bien", de: "Viel Vergnügen"},
+            {fr: "C'est parti", de: "Los geht's"},
+            {fr: "Magnifique", de: "Wunderschön"},
+            {fr: "Excellent choix", de: "Exzellente Wahl"},
+            {fr: "Progrès rapides", de: "Schnelle Fortschritte"},
+            {fr: "Restez motivé", de: "Bleiben Sie motiviert"},
+            {fr: "La clé du succès", de: "Der Schlüssel zum Erfolg"},
+            {fr: "Une belle aventure", de: "Ein schönes Abenteuer"},
+            {fr: "Ouvrez votre esprit", de: "Öffnen Sie Ihren Geist"},
+            {fr: "Parler sans peur", de: "Sprechen ohne Angst"},
+            {fr: "Vocabulaire utile", de: "Nützliches Vokabular"},
+            {fr: "Expressions typiques", de: "Typische Ausdrücke"},
+            {fr: "Au cœur de Paris", de: "Im Herzen von Paris"},
+            {fr: "Le style de vie", de: "Der Lebensstil"},
+            {fr: "La gastronomie", de: "Die Gastronomie"},
+            {fr: "Le bon accent", de: "Der richtige Akzent"},
+            {fr: "Une mélodie unique", de: "Eine einzigartige Melodie"},
+            {fr: "Savoir-faire", de: "Gewusst wie / Können"},
+            {fr: "Joie de vivre", de: "Lebensfreude"},
+            {fr: "Haute couture", de: "Gehobene Schneiderkunst"},
+            {fr: "Déjà-vu", de: "Schon einmal gesehen"},
+            {fr: "Fait accompli", de: "vollendete Tatsache"},
+            {fr: "Carte blanche", de: "Freie Hand haben"},
+            {fr: "Laissez-faire", de: "Einfach laufen lassen"},
+            {fr: "Vis-à-vis", de: "Gegenüber"},
+            {fr: "Tête-à-tête", de: "Zwiegespräch unter vier Augen"},
+            {fr: "Bon voyage", de: "Gute Reise"},
+            {fr: "À bientôt", de: "Bis bald"},
+            {fr: "Merci beaucoup", de: "Vielen Dank"},
+            {fr: "Fin du menu", de: "Ende des Menüs"}
+        ],
+        alltag: [
+            {fr: "Ça va ?", de: "Wie geht's?"}, {fr: "Ça marche", de: "Das läuft / Alles klar"}, {fr: "D'accord", de: "Einverstanden"},
+            {fr: "À plus", de: "Bis dann"}, {fr: "Merci", de: "Danke"}, {fr: "De rien", de: "Gern geschehen"},
+            {fr: "Pas mal", de: "Nicht schlecht"}, {fr: "C'est top", de: "Das ist super"}, {fr: "Pardon", de: "Verzeihung"},
+            {fr: "Je sais", de: "Ich weiß"}, {fr: "Peut-être", de: "Vielleicht"}, {fr: "Bien sûr", de: "Natürlich"},
+            {fr: "On y va", de: "Gehen wir / Packen wir's an"}, {fr: "C'est tout", de: "Das ist alles"}, {fr: "Bonne chance", de: "Viel Glück"},
+            {fr: "Aucune idée", de: "Keine Ahnung"}, {fr: "Pas de souci", de: "Kein Problem"}, {fr: "C'est nickel", de: "Das ist perfekt / blitzblank"},
+            {fr: "Tant mieux", de: "Umso besser"}, {fr: "C'est dommage", de: "Das ist schade"}, {fr: "À tout à l'heure", de: "Bis gleich"},
+            {fr: "Enchanté", de: "Sehr erfreut"}, {fr: "Fais gaffe", de: "Pass auf"}, {fr: "Tu rigoles ?", de: "Machst du Witze?"}, 
+            {fr: "Bonne idée", de: "Gute Idee"}, {fr: "Je t'aime", de: "Ich liebe dich"}, {fr: "Quoi de neuf ?", de: "Was gibt's Neues?"},
+            {fr: "Laisse tomber", de: "Lass gut sein / Vergiss es"}, {fr: "C'est pas grave", de: "Das ist nicht schlimm"}, {fr: "J'en ai marre", de: "Ich habe es satt"},
+            {fr: "Pas du tout", de: "Überhaupt nicht"}, {fr: "C'est la vie", de: "So ist das Leben"}, {fr: "À mon avis", de: "Meiner Meinung nach"},
+            {fr: "Tout à fait", de: "Ganz genau"}, {fr: "Sans doute", de: "Zweifellos"}, {fr: "Je m'en fous", de: "Das ist mir egal (umg.)"},
+            {fr: "Ce n'est pas tes oignons", de: "Das geht dich nichts an"}, {fr: "Avoir le cafard", de: "Trübsinn blasen"}, {fr: "Ah bon ?", de: "Ach wirklich?"},
+            {fr: "Dis donc !", de: "Sag mal! / Alle Achtung!"}, {fr: "Quand même", de: "Trotzdem / Immerhin"}, {fr: "N'importe quoi", de: "Quatsch / Völliger Unsinn"},
+            {fr: "Ça vaut le coup", de: "Das lohnt sich"}, {fr: "Tu t'en sors ?", de: "Kommst du klar?"}, {fr: "Bref", de: "Kurz gesagt"},
+            {fr: "Grave !", de: "Und wie! / Total!"}, {fr: "J'arrive", de: "Ich komme (gleich)"}, {fr: "Tu me manques", de: "Du fehlst mir"},
+            {fr: "À la folie", de: "Bis über beide Ohren"}, {fr: "Bonne nuit", de: "Gute Nacht"}
+        ],
+        basis: [
+            {fr: "Oui", de: "Ja"}, {fr: "Non", de: "Nein"}, {fr: "Bonjour", de: "Guten Tag"}, {fr: "Salut", de: "Hallo"},
+            {fr: "Qui ?", de: "Wer?"}, {fr: "Quoi ?", de: "Was?"}, {fr: "Où ?", de: "Wo?"}, {fr: "Quand ?", de: "Wann?"},
+            {fr: "Comment ?", de: "Wie?"}, {fr: "Pourquoi ?", de: "Warum?"}, {fr: "Grand", de: "Groß"}, {fr: "Petit", de: "Klein"},
+            {fr: "Beaucoup", de: "Viel"}, {fr: "Peu", de: "Wenig"}, {fr: "Maintenant", de: "Jetzt"}, {fr: "Plus tard", de: "Später"},
+            {fr: "Toujours", de: "Immer"}, {fr: "Jamais", de: "Niemals"}, {fr: "Souvent", de: "Oft"}, {fr: "Très", de: "Sehr"},
+            {fr: "Trop", de: "Zu viel"}, {fr: "Ici", de: "Hier"}, {fr: "Là-bas", de: "Dort"}, {fr: "Rien", de: "Nichts"}, 
+            {fr: "Tout", de: "Alles"}, {fr: "S'il vous plaît", de: "Bitte (höflich)"}, {fr: "Au revoir", de: "Auf Wiedersehen"},
+            {fr: "Bonsoir", de: "Guten Abend"}, {fr: "Bonne matinée", de: "Schönen Vormittag"}, {fr: "Bon après-midi", de: "Schönen Nachmittag"},
+            {fr: "Monsieur", de: "Herr"}, {fr: "Madame", de: "Frau"}, {fr: "Mademoiselle", de: "Fräulein"},
+            {fr: "Ami / Amie", de: "Freund / Freundin"}, {fr: "Homme", de: "Mann"}, {fr: "Femme", de: "Frau"},
+            {fr: "Enfant", de: "Kind"}, {fr: "Père", de: "Vater"}, {fr: "Mère", de: "Mutter"},
+            {fr: "Frère", de: "Bruder"}, {fr: "Sœur", de: "Schwester"}, {fr: "Aujourd'hui", de: "Heute"},
+            {fr: "Hier", de: "Gestern"}, {fr: "Demain", de: "Morgen"}, {fr: "Matin", de: "Morgen (Tageszeit)"},
+            {fr: "Midi", de: "Mittag"}, {fr: "Soir", de: "Abend"}, {fr: "Nuit", de: "Nacht"},
+            {fr: "Peut-être", de: "Vielleicht"}, {fr: "Heureux", de: "Glücklich"}
+        ],
+        reise: [
+            {fr: "Où est la gare ?", de: "Wo ist der Bahnhof?"}, {fr: "Un taxi", de: "Ein Taxi"}, {fr: "Le billet", de: "Die Fahrkarte"},
+            {fr: "L'hôtel", de: "Das Hotel"}, {fr: "À gauche", de: "Links"}, {fr: "À droite", de: "Rechts"},
+            {fr: "Tout droit", de: "Geradeaus"}, {fr: "L'aéroport", de: "Flughafen"}, {fr: "Le train", de: "Der Zug"},
+            {fr: "Le passeport", de: "Reisepass"}, {fr: "C'est loin ?", de: "Ist es weit?"}, {fr: "Où sommes-nous ?", de: "Wo sind wir?"},
+            {fr: "Je suis perdu", de: "Ich habe mich verlaufen"}, {fr: "Une valise", de: "Ein Koffer"}, {fr: "Le métro", de: "Die Metro"},
+            {fr: "Sortie", de: "Ausgang"}, {fr: "Entrée", de: "Eingang"}, {fr: "L'avion", de: "Das Flugzeug"},
+            {fr: "Le plan", de: "Der Plan"}, {fr: "Vélo", de: "Fahrrad"}, {fr: "Bateau", de: "Schiff"},
+            {fr: "C'est près", de: "Es ist nah"}, {fr: "Combien ?", de: "Wieviel?"}, {fr: "L'essence", de: "Benzin"}, 
+            {fr: "Voyage", de: "Reise"}, {fr: "La voiture", de: "Das Auto"}, {fr: "L'autobus", de: "Der Bus"},
+            {fr: "Un aller-simple", de: "Eine Hinfahrt"}, {fr: "Un aller-retour", de: "Hin- und Rückfahrt"}, {fr: "Quel quai ?", de: "Welches Gleis?"},
+            {fr: "Le guichet", de: "Der Fahrkartenschalter"}, {fr: "Horaire", de: "Fahrplan"}, {fr: "En retard", de: "Verspätung"},
+            {fr: "À l'heure", de: "Pünktlich"}, {fr: "La douane", de: "Der Zoll"}, {fr: "Chambre libre", de: "Freies Zimmer"},
+            {fr: "Clé", de: "Schlüssel"}, {fr: "Une carte", de: "Eine Karte / Landkarte"}, {fr: "La plage", de: "Der Strand"},
+            {fr: "La mer", de: "Das Meer"}, {fr: "La montagne", de: "Die Berge"}, {fr: "Le centre-ville", de: "Das Stadtzentrum"},
+            {fr: "Où sont les toilettes ?", de: "Wo sind die Toiletten?"}, {fr: "L'arrêt de bus", de: "Die Bushaltestelle"}, {fr: "Une réservation", de: "Eine Reservierung"},
+            {fr: "Changer de l'argent", de: "Geld wechseln"}, {fr: "Distributeur", de: "Geldautomat"}, {fr: "La valise", de: "Der Koffer"},
+            {fr: "Bon voyage !", de: "Gute Reise!"}, {fr: "Bon retour", de: "Gute Heimreise"}
+        ],
+        restaurant: [
+            {fr: "Une table", de: "Ein Tisch"}, {fr: "Le menu", de: "Die Karte / Das Menü"}, {fr: "L'addition", de: "Die Rechnung"},
+            {fr: "Un café", de: "Ein Kaffee"}, {fr: "Le vin", de: "Wein"}, {fr: "Le pain", de: "Brot"},
+            {fr: "Santé !", de: "Prost!"}, {fr: "Délicieux", de: "Köstlich"}, {fr: "Le sucre", de: "Zucker"},
+            {fr: "Le sel", de: "Salz"}, {fr: "Le serveur", de: "Kellner"}, {fr: "Bon appétit", de: "Guten Appetit"},
+            {fr: "L'eau", de: "Wasser"}, {fr: "Verre", de: "Glas"}, {fr: "Assiette", de: "Teller"},
+            {fr: "Fourchette", de: "Gabel"}, {fr: "Couteau", de: "Messer"}, {fr: "Poivre", de: "Pfeffer"},
+            {fr: "Le petit-déjeuner", de: "Frühstück"}, {fr: "Le déjeuner", de: "Mittagessen"}, {fr: "Le dîner", de: "Abendessen"},
+            {fr: "C'est chaud", de: "Es ist heiß"}, {fr: "La cuisine", de: "Küche"}, {fr: "Une bière", de: "Ein Bier"}, 
+            {fr: "Un jus", de: "Ein Saft"}, {fr: "Garçon !", de: "Herr Ober! (etwas veraltet)"}, {fr: "Une carafe d'eau", de: "Eine Karaffe Wasser (kostenlos)"},
+            {fr: "Le plat du jour", de: "Das Tagesgericht"}, {fr: "L'entrée", de: "Die Vorspeise"}, {fr: "Le plat principal", de: "Der Hauptgang"},
+            {fr: "Le dessert", de: "Die Nachspeise"}, {fr: "Bien cuit", de: "Durchgebraten"}, {fr: "A point", de: "Medium (Fleisch)"},
+            {fr: "Saignant", de: "Blutig (Fleisch)"}, {fr: "Je suis végétarien", de: "Ich bin Vegetarier"}, {fr: "C'est froid", de: "Es ist kalt"},
+            {fr: "La serviette", de: "Die Serviette"}, {fr: "Une cuillère", de: "Ein Löffel"}, {fr: "Le Fromage", de: "Der Käse"},
+            {fr: "Le poisson", de: "Der Fisch"}, {fr: "La viande", de: "Das Fleisch"}, {fr: "Le poulet", de: "Das Hühnchen"},
+            {fr: "Les légumes", de: "Das Gemüse"}, {fr: "Les fruits", de: "Das Obst"}, {fr: "Une bouteille", de: "Eine Flasche"},
+            {fr: "Garder la monnaie", de: "Stimmt so (Trinkgeld)"}, {fr: "C'était excellent", de: "Es war exzellent"}, {fr: "C'est épicé", de: "Es ist scharf/gewürzt"},
+            {fr: "Un thé", de: "Ein Tee"}, {fr: "Une glace", de: "Ein Eis"}
+        ],
+        behoerden: [
+            {fr: "La police", de: "Polizei"}, {fr: "Aidez-moi", de: "Helfen Sie mir"}, {fr: "Urgent", de: "Dringend"},
+            {fr: "Papiers", de: "Ausweise"}, {fr: "Signature", de: "Unterschrift"}, {fr: "Mairie", de: "Rathaus"},
+            {fr: "Formulaire", de: "Formular"}, {fr: "Rendez-vous", de: "Termin"}, {fr: "Ambassade", de: "Botschaft"},
+            {fr: "L'argent", de: "Geld"}, {fr: "La loi", de: "Gesetz"}, {fr: "Amende", de: "Bußgeld"},
+            {fr: "Hôpital", de: "Krankenhaus"}, {fr: "Médecin", de: "Arzt"}, {fr: "Pharmacie", de: "Apotheke"},
+            {fr: "Document", de: "Dokument"}, {fr: "Identité", de: "Identität"}, {fr: "Perdu", de: "Verloren"},
+            {fr: "Volé", de: "Gestohlen"}, {fr: "Banque", de: "Bank"}, {fr: "Reçu", de: "Quittung"},
+            {fr: "Assurance", de: "Versicherung"}, {fr: "Avocat", de: "Anwalt"}, {fr: "Tribunal", de: "Gericht"}, 
+            {fr: "Visa", de: "Visum"}, {fr: "Le commissariat", de: "Die Polizeiwache"}, {fr: "Déclaration", de: "Meldung / Aussage"},
+            {fr: "Le fonctionnaire", de: "Der Beamte"}, {fr: "Le bureau", de: "Das Büro"}, {fr: "Guichet", de: "Schalter"},
+            {fr: "Adresse actuelle", de: "Aktuelle Adresse"}, {fr: "Date de naissance", de: "Geburtsdatum"}, {fr: "Nationalité", de: "Staatsangehörigkeit"},
+            {fr: "État civil", de: "Familienstand"}, {fr: "Célibataire", de: "Ledig"}, {fr: "Marié", de: "Verheiratet"},
+            {fr: "Le passeport expire", de: "Der Pass läuft ab"}, {fr: "Timbre fiscal", de: "Steuermarke"}, {fr: "Impôts", de: "Steuern"},
+            {fr: "Permis de conduire", de: "Führerschein"}, {fr: "Carte d'identité", de: "Personalausweis"}, {fr: "La douane", de: "Der Zoll"},
+            {fr: "L'amende", de: "Das Bußgeld"}, {fr: "Porter plainte", de: "Anzeige erstatten"}, {fr: "Urgence", de: "Notfall"},
+            {fr: "Les pompiers", de: "Die Feuerwehr"}, {fr: "L'ambulance", de: "Der Krankenwagen"}, {fr: "Une attestation", de: "Eine Bescheinigung"},
+            {fr: "Signer ici", de: "Hier unterschreiben"}, {fr: "Valable", de: "Gültig"}
+        ],
+        alltagswissen: [
+            {fr: "Il fait beau", de: "Schönes Wetter"}, {fr: "Quelle heure ?", de: "Wie spät ist es?"}, {fr: "Famille", de: "Familie"},
+            {fr: "Amis", de: "Freunde"}, {fr: "Maison", de: "Haus"}, {fr: "Travail", de: "Arbeit"},
+            {fr: "École", de: "Schule"}, {fr: "Ordinateur", de: "Computer"}, {fr: "Ville", de: "Stadt"},
+            {fr: "Village", de: "Dorf"}, {fr: "Hier", de: "Gestern"}, {fr: "Aujourd'hui", de: "Heute"},
+            {fr: "Demain", de: "Morgen"}, {fr: "Cher", de: "Teuer"}, {fr: "Bon marché", de: "Billig"},
+            {fr: "Ouvrir", de: "Öffnen"}, {fr: "Fermer", de: "Schließen"}, {fr: "Musique", de: "Musik"},
+            {fr: "Sport", de: "Sport"}, {fr: "Cadeau", de: "Geschenk"}, {fr: "Journal", de: "Zeitung"},
+            {fr: "Météo", de: "Wetterbericht"}, {fr: "Téléphone", de: "Telefon"}, {fr: "Magasin", de: "Laden"}, 
+            {fr: "Rue", de: "Straße"}, {fr: "Il pleut", de: "Es regnet"}, {fr: "Il fait froid", de: "Es ist kalt"},
+            {fr: "Le soleil", de: "Die Sonne"}, {fr: "La lune", de: "Der Mond"}, {fr: "Le temps libre", de: "Die Freizeit"},
+            {fr: "Le livre", de: "Das Buch"}, {fr: "Le film", de: "Der Film"}, {fr: "La télévision", de: "Das Fernsehen"},
+            {fr: "Internet", de: "Internet"}, {fr: "Le magasin", de: "Das Geschäft"}, {fr: "Acheter", de: "Kaufen"},
+            {fr: "Payer", de: "Bezahlen"}, {fr: "L'argent", de: "Das Geld"}, {fr: "La clé", de: "Der Schlüssel"},
+            {fr: "La montre", de: "Die Armbanduhr"}, {fr: "La semaine", de: "Die Woche"}, {fr: "Le mois", de: "Der Monat"},
+            {fr: "L'année", de: "Das Jahr"}, {fr: "Lundi", de: "Montag"}, {fr: "Dimanche", de: "Sonntag"},
+            {fr: "Le printemps", de: "Der Frühling"}, {fr: "L'été", de: "Der Sommer"}, {fr: "L'automne", de: "Der Herbst"},
+            {fr: "L'hiver", de: "Der Winter"}, {fr: "C'est interessant", de: "Das ist interessant"}
+        ]
+    };
+
+    let currentCat = 'welcome';
+    let index = 0;
+    let autoSpeakActive = false;
+
+    function setCategory(cat) {
+        currentCat = cat;
+        index = 0;
+        autoSpeakActive = true; 
+        updateCard();
+    }
+
+    function updateCard() {
+        const item = data[currentCat][index];
+        document.getElementById('phrase-fr').innerText = item.fr;
+        document.getElementById('phrase-de').innerText = item.de;
+        document.getElementById('counter').innerText = `${index + 1} / ${data[currentCat].length}`;
+        if(autoSpeakActive) {
+            speak();
+        }
+    }
+
+    function nextCard() {
+        autoSpeakActive = true;
+        index = (index + 1) % data[currentCat].length;
+        updateCard();
+    }
+
+    function prevCard() {
+        autoSpeakActive = true;
+        index = (index - 1 + data[currentCat].length) % data[currentCat].length;
+        updateCard();
+    }
+
+    function speak() {
+        const text = document.getElementById('phrase-fr').innerText;
+        if(text === "Bienvenue" && currentCat === 'welcome' && index === 0 && !autoSpeakActive) return;
+        
+        window.speechSynthesis.cancel();
+        
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = text;
+        msg.lang = 'fr-FR';
+        msg.rate = 0.85;
+        window.speechSynthesis.speak(msg);
+    }
+
+    function openModal(type) {
+        const modal = document.getElementById('legalModal');
+        const title = document.getElementById('modalTitle');
+        const body = document.getElementById('modalBody');
+        
+        if(type === 'impressum') {
+            title.innerText = "Impressum & Nutzungshinweise";
+            body.innerHTML = `
+                <strong>Betreiber der App:</strong><br>
+                Katharina Schütz<br>
+                [Deine Straße / Wohnort]<br><br>
+                <strong>Kontakt:</strong><br>
+                E-Mail: [Deine E-Mail-Adresse]<br>
+                Telefon: [Deine Telefonnummer]<br><br>
+                <strong>Verantwortlich für den Inhalt:</strong><br>
+                Katharina Schütz<br><br>
+                <hr style="border:0; border-top:1px solid var(--gold); margin:10px 0;">
+                <strong>Wichtiger Testvorbehalt & Urheberrecht:</strong><br>
+                Diese Lern-App befindet sich in einer <strong>Testphase (Testversion)</strong> und dient ausschließlich zu internen Demonstrations- und Prüfzwecken.<br><br>
+                Eine Nutzung, Vervielfältigung oder private Verwendung der Inhalte, des Quelltextes oder der Struktur ist ausdrücklich <strong>nicht gestattet</strong>.<br><br>
+                Die App und alle darin enthaltenen Daten sind urheberrechtlich geschützt. Eine Weiterleitung, Verbreitung oder Zugänglichmachung an Dritte ist <strong>strikt untersagt</strong> und darf ausnahmslos nur mit der vorherigen, expliziten Erlaubnis von Katharina Schütz erfolgen.
+            `;
+        } else if(type === 'datenschutz') {
+            title.innerText = "Datenschutz";
+            body.innerHTML = `
+                <strong>Datenschutzerklärung</strong><br><br>
+                1. Diese App verarbeitet personenbezogene Daten ausschließlich lokal auf Ihrem Endgerät.<br><br>
+                2. Es werden keine Tracker, Cookies oder Analienstdienste verwendet.<br><br>
+                3. Die Audioausgabe nutzt die integrierte Web Speech API Ihres Browsers. Es werden keine Audiodaten an externe Server übermittelt.<br><br>
+                4. Sie haben jederzeit das Recht auf Auskunft über die App-Funktionen.
+            `;
+        }
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('legalModal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('legalModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    window.onload = () => updateCard();
+</script>
+
+</body>
+</html>
